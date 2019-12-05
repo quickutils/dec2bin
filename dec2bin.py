@@ -31,7 +31,7 @@ def dec2bin(value, verbose = 'false'):
             binary_value += "0"
         else:
             if verbose == 'true':
-                print("{0:<18} {1:^20} {2:>10}".format('(2**{}) > {}'.format(k, true_value), 'hence {}-{}'.format(true_value, power_result), 'binary+=1'))
+                print("{0:<18} {1:^20} {2:>10}".format('(2**{}) < {}'.format(k, true_value), 'hence {}-{}'.format(true_value, power_result), 'binary+=1'))
             true_value = true_value - power_result
             binary_value += "1"
     return binary_value
