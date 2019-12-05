@@ -1,20 +1,40 @@
 import sys
 import argparse
 
-def bin2dec(value, verbose):
+def bin2dec(value, verbose = 'false'):
     decimal_value = 0
     index = len(value) - 1
     for x in value:
         if verbose == 'true':
-            print("{}*2**{}  ".format(x, index), end='')
+            print("{}*(2**{})  {} ".format(x, index, ( "+" if (index != 0) else "")), end='')
         decimal_value += (int(x) * (2**(index)))
         index -= 1
     if verbose == 'true':
         print()
     return decimal_value
 
-def dec2bin(value, verbose):
-    return 3
+def dec2bin(value, verbose = 'false'):
+    binary_value = ""
+    true_value = int(value)
+    largest_power = 0
+    power_result = 0
+    while (2**largest_power) < true_value:
+        largest_power += 1
+    largest_power -= 1
+    if verbose == 'true':
+        print("{} largest possible power of two is {}".format(value, largest_power))
+    for k in range(largest_power, -1, -1):
+        power_result =  2 ** k
+        if power_result > true_value:
+            if verbose == 'true':
+                print("{0:<18} {1:^20} {2:>10}".format('(2**{}) > {}'.format(k, true_value), 'hence {}-0'.format(true_value), 'binary+=0'))
+            binary_value += "0"
+        else:
+            if verbose == 'true':
+                print("{0:<18} {1:^20} {2:>10}".format('(2**{}) > {}'.format(k, true_value), 'hence {}-{}'.format(true_value, power_result), 'binary+=1'))
+            true_value = true_value - power_result
+            binary_value += "1"
+    return binary_value
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Convert a binary to decimal or from decimal to binary.')
