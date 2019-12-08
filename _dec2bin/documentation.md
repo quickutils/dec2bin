@@ -2,7 +2,7 @@
 title: Documentation
 category: Main Menu
 order: 2
-tags: [Cronux, dec2bin, Thecarisma, Windows]
+tags: 
 years: 2019
 tile-header: front_image.png
 tile: front_image.png
@@ -10,114 +10,80 @@ links:
   
 ---
 
-## List Device
+## Convert from binary to decimal 
 
-To view all the devices present in the system, the `list` command is issued 
-to the program. 
-
-```batch
-dec2bin list
-```
-
-All the devices listed might not be a total complete list because the devices are fetched 
-from the windows [`CIM_LogicalDevice`](https://docs.microsoft.com/en-us/windows/win32/cimwin32prov/cim-logicaldevice) 
-group. 
-
-To list a particular device information the caption name or part of the caption name or instance 
-id can be issued as the second parameter. Ensure the second parameter is in quote if it more than 
-one word.
+To convert from binary to decimal the flag `--b2d` flag is used follow by the 
+binary value 
 
 ```
-dec2bin list "CPU"
+python dec2bin.py --b2d 11001010
 ```
 
-The command above list all the devices whose name or instance id contains the text **CPU**. 
-similar result below ...
+The script will convert the binary to decimal with the full description printed in the 
+terminal. to prevent printing of the description the `--verbose false` should be issued 
+along with the flag `--b2d`.
 
-<code>
-Name: Intel(R) Core(TM) i7-8550U CPU @ 1.80GHz, Status: OK, Instance Path: ...<br />
-Name: Intel(R) Core(TM) i7-8550U CPU @ 1.80GHz, Status: OK, Instance Path: ...<br />
-Name: Intel(R) Core(TM) i7-8550U CPU @ 1.80GHz, Status: OK, Instance Path: ...<br />
-Name: Intel(R) Core(TM) i7-8550U CPU @ 1.80GHz, Status: OK, Instance Path: ACPI\GE<br />
-</code>
-
-## Enable A Device
-
-The command `enable` can be used to enable an idle or disabled device. The operation will fail if 
-dec2bin is executed in admin environment.
-
-The second argument which is the instance id or part of instance id/name of the devices must be 
-supplied.
+The commands above will print out the following result...
 
 ```
-dec2bin enable Bluetooth
+1*(2**7)  + 1*(2**6)  + 0*(2**5)  + 0*(2**4)  + 1*(2**3)  + 0*(2**2)  + 1*(2**1)  + 0*(2**0)
+Binary 11001010 to Decimal is 202
 ```
 
-The command above will enable all devices related to the bluetooth.
+## Convert from decimal to binary 
 
-## Disable A Device
-
-The command `disable` can be used to disable an already enabled device. The operation will fail if 
-dec2bin is executed in admin environment.
-
-The second argument which is the instance id or part of instance id/name of the devices must be 
-supplied.
+To convert from deciomal to binary the flag `--d2b` flag is used follow by the decimal value
 
 ```
-dec2bin disable Bluetooth
+python dec2bin.py --d2b 1359
 ```
 
-The command above will disable all devices related to the bluetooth.
+The script will convert the decimal to binary with the full description printed in the 
+terminal. to prevent printing of the description the `--verbose false` should be issued 
+along with the flag `--d2b`.
 
-## Jaming A Device
-
-In a situation where there is a ransom ware holding a device or USB port captive or a device access control 
-program is preventing you from using a USB port, the `jam` and `xjam` command can be used to gain access to the 
-device till the device is disconnected. 
-
-### Jam
-
-The `jam` command uses a simple brute force method that keep enabling the device till the system deny access 
-to any program trying to disable or enable the device. In this mode the device keep enabling and disbling continously 
-util around the 14th time when it become stable for use for the session. 
-
-The drawback of this method is that it is a bit slow, the windows notification will keep comming up which is annoying. 
-A simple example below... 
+The commands above will print out the following result...
 
 ```
-dec2bin jam "Mass Storage Device"
+1359 largest possible power of two is 10
+(2**10) > 1359       hence 1359-1024     binary+=1
+(2**9) > 335           hence 335-0       binary+=0
+(2**8) > 335          hence 335-256      binary+=1
+(2**7) > 79             hence 79-0       binary+=0
+(2**6) > 79            hence 79-64       binary+=1
+(2**5) > 15             hence 15-0       binary+=0
+(2**4) > 15             hence 15-0       binary+=0
+(2**3) > 15             hence 15-8       binary+=1
+(2**2) > 7              hence 7-4        binary+=1
+(2**1) > 3              hence 3-2        binary+=1
+(2**0) > 1              hence 1-1        binary+=1
+Decimal 1359 to Binary is 10101001111
 ```
-
-### XJam
-
-The `xjam` command is a better alternative to the jam command as it is very fast and neat, the method used is to 
-enable the device and open an invisible command prompt that navigate to the device folder. 
-
-The drawback of this method is that it currently just work for USB Drive devices (tested), it open an invisible 
-command prompt that is kept alive till the USB is manually disconnected. This method was proposed by [shegzee](https://github.com/shegzee). 
-A simple example below...
-
-```
-dec2bin xjam "Mass Storage Device"
-```
-
-The command above recover the drive from any device controll program in less than a minute.
 
 ## Help
 
-To view all available command from the command line, use the `help` command
+To view all available command from the command line, use the `-h` command
 
 ```
-dec2bin help
+dec2bin -h
 ```
 
-## Generate Installer and Archive 
+The help screen is printed like below
 
-Use the [`build.bat`](https://github.com/quickutils/dec2bin/blob/master/setupscripts/build.bat) script in the folder [setupscripts](https://github.com/quickutils/dec2bin/tree/master/setupscripts) to generate 
-the installer or zip archive. You must have inno Setup script and Cronux installed on your system.
+```
+usage: dec2bin.py [-h] [--b2d] [--d2b] [--verbose VERBOSE] value
 
- - You can download Inno Setup from [here](http://www.jrsoftware.org/isinfo.php)
- - You can download Cronux from [here](https://thecarisma.github.io/Cronux/)
+Convert a binary to decimal or from decimal to binary.
+
+positional arguments:
+  value              The value to convert
+
+optional arguments:
+  -h, --help         show this help message and exit
+  --b2d              Convert the binary value to decimal
+  --d2b              Convert the decimal value to binary
+  --verbose VERBOSE  Print out the operation description
+```
 
 ---
 <ul>
